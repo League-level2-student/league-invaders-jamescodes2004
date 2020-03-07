@@ -17,10 +17,12 @@ LeagueInvaders(){
 	frame = new JFrame();
 }
 void setup() {
+	frame.addKeyListener(panel);
 	frame.add(panel);
 	frame.setSize(WIDTH, HEIGHT);
 	frame.setVisible(true);
 	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 	
 }
 
