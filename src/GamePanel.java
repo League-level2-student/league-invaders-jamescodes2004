@@ -14,15 +14,26 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener{
 	private Font sideFont;
 	Rocketship ship = new Rocketship(250,700, 50, 50);
 	Timer frameDraw;
+	Timer alienSpawn;
 	  final int MENU = 0;
 	    final int GAME = 1;
 	    final int END = 2;
 	    int currentState = MENU;
+	    ObjectManager manager = new ObjectManager(ship);
 	    GamePanel(){
 	    	sideFont = new Font("Arial", Font.PLAIN,24);
 	    	titleFont = new Font("Arial", Font.PLAIN,48);
 	    	frameDraw = new Timer(1000/60, this);
 	    	frameDraw.start();
+	    }
+	    public void startGame() {
+	    	alienSpawn = new Timer(1000, manager);
+	    	if (currentState==END) {
+	    		alienSpawn.stop();
+	    	}
+	    	else {
+	    	alienSpawn.start();
+	    	}
 	    }
 @Override
 public void paintComponent(Graphics g) {
@@ -38,7 +49,7 @@ void updateMenuState() {
 	
 }
 void updateGameState() { 
-	
+	manager.update();
 }
 void updateEndState()  {
 	
@@ -58,7 +69,7 @@ void drawMenuState(Graphics g) {
 void drawGameState(Graphics g) { 
 	g.setColor(Color.BLACK);
 	g.fillRect(0, 0, LeagueInvaders.WIDTH, LeagueInvaders.HEIGHT);
-	ship.draw(g);
+	manager.draw(g);
 }
 void drawEndState(Graphics g)  { 
 	g.setColor(Color.RED);
@@ -91,7 +102,10 @@ public void keyPressed(KeyEvent e) {
 		System.out.println("ENTER");
 	    if (currentState == END) {
 	        currentState = MENU;
-	    } else {
+	    } 
+
+	    else {
+	    	startGame();
 	        currentState++;
 	    }
 	    System.out.println(currentState);
@@ -120,6 +134,9 @@ public void keyPressed(KeyEvent e) {
 	    if (ship.x<LeagueInvaders.WIDTH-ship.width) {
 	    ship.right();
 	    }
+	}
+	if (e.getKeyCode()==KeyEvent.VK_SPACE) {
+		manager.addProjectile(ship.getProjectile());
 	}
 }
 @Override
